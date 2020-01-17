@@ -1,6 +1,6 @@
-const { Worker }  = require('worker_threads');;
+const { Worker }  = require('worker_threads');
 
-let workDir = __dirname+"/dbWorker.js";
+let workDir = __dirname+"/dbLocal.js";
 
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -38,9 +38,11 @@ const mainFunc = async () => {
 mainFunc().then((res) => {
     // start worker
     const worker = new Worker(workDir); 
-    console.log("Sending crawled data to dbWorker...");
+    console.log("Sending crawled data to dbLocal...");
+
+    let data = JSON.stringify(res)
     // send formatted data to worker thread 
-    worker.postMessage(res);
+    worker.postMessage(data);
 
     // listen to message from worker thread
     worker.on("message", (message) => {
